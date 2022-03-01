@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+  <style>
+      .loader{
+           
+           width: 100%;
+           height: 100vh;
+           background: rgb(131,58, 180);
+           background: linear-gradient(90deg, rgb(0, 0, 0) 0%, rgb(5, 5, 5) 46%, rgb(8, 8, 8) 100%);
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           position: fixed;
+           
+           transition:all .5s ease;
+           
+       }
+       .ring{
+           width: 45px;
+           height: 45px;
+           justify-content: center;
+           align-items: center;
+           border: 5px solid black;
+           border-radius: 50%;
+           position: relative;
+           display: flex;
+       }
+       .ring:after{
+           position: absolute;
+           content: "";
+           width: 100%;
+           height: 100%;
+           display: flex;
+           border: 5px solid rgb(255, 0, 0);
+           border-radius: 50%;
+           border-top-color: transparent;
+           animation: rotate 1.5s linear infinite;
+       }
+       @keyframes rotate {
+           100%{
+               transform: rotate(360deg);
+           }
+       }
+      input{
+          width: 20%;
+          height: 20px;
+          border: 3px solid rgb(25, 0, 255);
+          margin-left: 520px;
+          background-color: rgb(51, 58, 65);
+      }
+      button{
+          width: 100px;
+          height: 30px;
+          background-color: rgb(51, 58, 65);
+          border-radius: 10px;
+          margin-left: 600px;
+      }
+      body{
+          background: rgb(0, 101, 101);
+      }
+  </style>
+</head>
+<body>
+    <div class="loader" style="display: none;">
+        <div class="ring"></div>
+    </div>
+  <div class="container"></div>
+  <input type="" name="" placeholder="Search..."><br><br>
+  <button>Search</button>
+  <script type="text/javascript">
+    document.getElementsByTagName('button')[0].onclick = () => {
+      const loader = document.querySelector('.loader');
+      loader.style.display = "flex";
+      document.querySelector('.container').textContent = "";
+      let input = document.getElementsByTagName('input')[0].value;
+      let rinput = input.replace('&', " ");
+      let fdata = fetch('https://api.unsplash.com/search/photos?client_id=M4tosJ0ZVtdOsBKPnaDIMQ3ik-IZf1OlhOWMIGfwSJw&query=' + input);
+      fdata.then((result)=>{
+        let data = result.json();
+        data.then((res)=>{
+          let datas = res['results'];
+          let len = datas.length;
+          let i = 0;
+          while (len){
+            let img = document.createElement('img'),
+              contan = document.querySelector('.container');
+            img.src = datas[i].urls.full;
+            img.style.cssText = `
+            width:300px;
+            height:300px;
+            margin-left:10px;
+            margin-top:10px;
+            `; 
+            contan.append(img);
+
+            console.log(datas[i].urls.full)
+            --len;
+            ++i;
+            
+          }  loader.style.display = "none";
+        });
+      });
+      
+    }
+      
+  </script>
+</body>
+</html>
